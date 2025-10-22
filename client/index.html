@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f8f9fa;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        color: #333;
+      }
+
+      #chat {
+        background: white;
+        border: 1px solid #e0e0e0;
+        width: 100%;
+        max-width: 480px;
+        height: 70vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      #messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      #messages::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      #messages::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      #messages::-webkit-scrollbar-thumb {
+        background: #ccc;
+      }
+
+      #messages li {
+        padding: 8px 12px;
+        background: #f0f0f0;
+        max-width: 75%;
+        word-wrap: break-word;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      #messages li:nth-child(even) {
+        background: #333;
+        color: white;
+        align-self: flex-end;
+      }
+
+      #form {
+        padding: 16px;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        gap: 8px;
+      }
+
+      #message {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        outline: none;
+        background: white;
+      }
+
+      #message:focus {
+        border-color: #333;
+      }
+
+      button[type="submit"] {
+        background: #333;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      button[type="submit"]:hover {
+        background: #555;
+      }
+
+      /* Responsive */
+      @media (max-width: 480px) {
+        body {
+          padding: 0;
+        }
+
+        #chat {
+          height: 100vh;
+          max-width: 100%;
+          border: none;
+        }
+      }
+    </style>
+
+    <script type="module">
+      import { io } from "https://cdn.socket.io/4.8.1/socket.io.esm.min.js";
+      const socket = io();
+
+      const form = document.getElementById("form");
+      const messageInput = document.getElementById("message");
+      const messagesList = document.getElementById("messages");
+
+      socket.on("chat message", (msg) => {
+        const li = document.createElement("li");
+        li.textContent = msg;
+        messagesList.appendChild(li);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const message = messageInput.value;
+        if (message.trim() !== "") {
+          socket.emit("chat message", message);
+          messageInput.value = "";
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <section id="chat">
+      <ul id="messages"></ul>
+      <form id="form">
+        <input
+          type="text"
+          name="message"
+          id="message"
+          placeholder="type a message"
+          autocomplete="off"
+        />
+        <button type="submit">Enviar</button>
+      </form>
+    </section>
+  </body>
+</html>
