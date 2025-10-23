@@ -13,39 +13,46 @@
       }
 
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: #f8f9fa;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter",
+          "Roboto", sans-serif;
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px;
-        color: #333;
+        padding: 24px;
+        color: #e0e0e0;
       }
 
       #chat {
-        background: white;
-        border: 1px solid #e0e0e0;
+        background: #1e1e1e;
+        border: 1px solid #2a2a2a;
+        border-radius: 16px;
         width: 100%;
-        max-width: 480px;
-        height: 70vh;
+        max-width: 520px;
+        height: 75vh;
+        max-height: 800px;
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
       }
 
       #messages {
         flex: 1;
-        padding: 20px;
+        padding: 28px 24px;
         overflow-y: auto;
         list-style: none;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 14px;
+        background: #1a1a1a;
       }
 
       #messages::-webkit-scrollbar {
-        width: 4px;
+        width: 6px;
       }
 
       #messages::-webkit-scrollbar-track {
@@ -53,59 +60,125 @@
       }
 
       #messages::-webkit-scrollbar-thumb {
-        background: #ccc;
+        background: #3a3a3a;
+        border-radius: 3px;
+        transition: background 0.2s ease;
+      }
+
+      #messages::-webkit-scrollbar-thumb:hover {
+        background: #4a4a4a;
       }
 
       #messages li {
-        padding: 8px 12px;
-        background: #f0f0f0;
-        max-width: 75%;
+        padding: 12px 16px;
+        max-width: 80%;
         word-wrap: break-word;
-        font-size: 14px;
-        line-height: 1.4;
+        font-size: 14.5px;
+        line-height: 1.5;
+        border-radius: 16px;
+        display: inline-block;
+        position: relative;
+        margin-bottom: 2px;
+        animation: fadeInMessage 0.3s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
       }
 
-      #messages li:nth-child(even) {
-        background: #333;
-        color: white;
+      @keyframes fadeInMessage {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      #messages li:hover {
+        transform: translateY(-1px);
+      }
+
+      .my-message {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #ffffff;
         align-self: flex-end;
+        border-bottom-right-radius: 4px;
+      }
+
+      .my-message:hover {
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+      }
+
+      .other-message {
+        background: #252525;
+        color: #e8e8e8;
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+        border: 1px solid #2f2f2f;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .other-message:hover {
+        background: #2a2a2a;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       }
 
       #form {
-        padding: 16px;
-        border-top: 1px solid #e0e0e0;
+        padding: 20px;
+        border-top: 1px solid #2a2a2a;
         display: flex;
-        gap: 8px;
+        gap: 12px;
+        background: #1e1e1e;
       }
 
       #message {
         flex: 1;
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        font-size: 14px;
+        padding: 12px 16px;
+        border: 1px solid #2f2f2f;
+        border-radius: 12px;
+        font-size: 14.5px;
         outline: none;
-        background: white;
+        background: #252525;
+        color: #e8e8e8;
+        transition: all 0.2s ease;
+        font-family: inherit;
+      }
+
+      #message::placeholder {
+        color: #6a6a6a;
       }
 
       #message:focus {
-        border-color: #333;
+        border-color: #10b981;
+        background: #2a2a2a;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
       }
 
       button[type="submit"] {
-        background: #333;
-        color: white;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #ffffff;
         border: none;
-        padding: 8px 16px;
+        border-radius: 12px;
+        padding: 12px 24px;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 14.5px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        letter-spacing: 0.3px;
       }
 
       button[type="submit"]:hover {
-        background: #555;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+      }
+
+      button[type="submit"]:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
       }
 
       /* Responsive */
-      @media (max-width: 480px) {
+      @media (max-width: 600px) {
         body {
           padding: 0;
         }
@@ -113,31 +186,77 @@
         #chat {
           height: 100vh;
           max-width: 100%;
+          border-radius: 0;
           border: none;
         }
+
+        #messages {
+          padding: 20px 16px;
+        }
+
+        #form {
+          padding: 16px;
+        }
+      }
+
+      /* Scroll behavior */
+      html {
+        scroll-behavior: smooth;
       }
     </style>
 
     <script type="module">
       import { io } from "https://cdn.socket.io/4.8.1/socket.io.esm.min.js";
-      const socket = io();
+
+      const getUsername = async () => {
+        const username = localStorage.getItem("username");
+
+        const randomUser = await fetch("https://randomuser.me/api/", {
+          method: "GET",
+        });
+        const data = await randomUser.json();
+        const [results] = data.results;
+        const usernameRandom = results.login.username;
+
+        localStorage.setItem("username", usernameRandom);
+        return usernameRandom;
+      };
+
+      const socket = io({
+        auth: { serverOffset: 0, username: await getUsername() },
+      });
 
       const form = document.getElementById("form");
       const messageInput = document.getElementById("message");
       const messagesList = document.getElementById("messages");
 
-      socket.on("chat message", (msg) => {
+      socket.on("chat message", (msg, serverOffset, username, timestamp) => {
         const li = document.createElement("li");
-        li.textContent = msg;
+        li.className =
+          username === localStorage.getItem("username")
+            ? "my-message"
+            : "other-message";
+        li.innerHTML = `
+          <div>${msg}</div>
+          <div style="margin-top:4px; font-size:12px; opacity:0.7;">
+            <span>${username}</span>
+            <span style="margin-left:8px;">${new Date(
+              timestamp
+            ).toLocaleTimeString()}</span>
+          </div>
+        `;
         messagesList.appendChild(li);
-        window.scrollTo(0, document.body.scrollHeight);
+        messagesList.scrollTop = messagesList.scrollHeight;
+
+        socket.auth.serverOffset = serverOffset;
       });
 
       form.addEventListener("submit", (e) => {
         e.preventDefault();
+        const username = localStorage.getItem("username");
         const message = messageInput.value;
         if (message.trim() !== "") {
-          socket.emit("chat message", message);
+          socket.emit("chat message", message, username);
           messageInput.value = "";
         }
       });
