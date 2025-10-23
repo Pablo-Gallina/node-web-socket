@@ -4,6 +4,10 @@ import logger from "morgan";
 import { Server } from "socket.io";
 import { createServer } from "http";
 
+import dotenv from "dotenv";
+import { createClient } from "@libsql/client";
+dotenv.config();
+
 const port = 3000;
 
 const app = express();
@@ -15,6 +19,19 @@ const io = new Server(server, {
   },
 });
 
+const db = createClient({
+  url: process.env.LIBSQL_DB_URL,
+  authToken: process.env.LIBSQL_DB_AUTH_TOKEN,
+});
+
+await db.execute(`
+  CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    content TEXT NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+`);
+
 io.on("connection", (socket) => {
   console.log("a user connected");
 
@@ -22,10 +39,22 @@ io.on("connection", (socket) => {
     console.log("user disconnected");
   });
 
-  socket.on("chat message", (msg) => {
-    console.log(`message: ${msg}`);
+  socket.on("chat message", async (msg) => {
+    let result;
 
-    io.emit("chat message", msg);
+    try {
+      result = await db.execute({
+        sql: "INSERT INTO messages (content) VALUES (:content)",
+        args: { content: msg },
+      });
+
+      console.log(result);
+    } catch (error) {
+      console.error("Error inserting message:", error);
+      return;
+    }
+
+    io.emit("chat message", msg, result.lastInsertRowid.toString());
   });
 });
 
